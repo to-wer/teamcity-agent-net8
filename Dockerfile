@@ -27,6 +27,9 @@ WORKDIR /opt/buildagent
 # Kopiere die Startskripte für den Agenten
 COPY run-agent.sh /opt/buildagent/
 
+# Erstelle das Zielverzeichnis
+RUN mkdir conf.dist
+
 COPY conf.dist/buildAgent.dist.properties /opt/buildAgent/conf.dist
 
 # Setze die Ausführungsrechte für das Startskript
