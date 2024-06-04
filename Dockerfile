@@ -3,12 +3,12 @@ FROM jetbrains/teamcity-agent:latest
 
 # Installiere Abhängigkeiten
 RUN apt-get update && apt-get install -y \
-    curl \
+    wget \
     apt-transport-https \
     software-properties-common
 
 # Installiere das Microsoft-Paketrepository und die Schlüssel
-RUN curl -sSL https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
+RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb \
     && rm packages-microsoft-prod.deb
 
@@ -18,11 +18,14 @@ RUN apt-get update && apt-get install -y dotnet-sdk-8.0
 # Setze die Umgebungsvariable für den Pfad
 ENV DOTNET_ROOT=/usr/share/dotnet
 
-# Setze den Arbeitsverzeichnis und kopiere die Konfigurationsdatei
-WORKDIR /data/teamcity_agent/conf
+# Setze das Arbeitsverzeichnis
+WORKDIR /opt/buildagent
 
-# Kopiere die Konfigurationsdateien (falls nötig)
-#COPY your-config-file.xml /data/teamcity_agent/conf/buildAgent.properties
+# Kopiere die Startskripte für den Agenten
+COPY run-agent.sh /opt/buildagent/
+
+# Setze die Ausführungsrechte für das Startskript
+RUN chmod +x /opt/buildagent/run-agent.sh
 
 # Startbefehl für den TeamCity-Agenten
-CMD ["/run-services.sh"]
+CMD ["/opt/buildagent/run-agent.sh"]
