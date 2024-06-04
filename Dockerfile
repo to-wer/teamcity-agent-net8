@@ -15,7 +15,7 @@ ENV DOTNET_ROOT=/usr/share/dotnet
 WORKDIR /data/teamcity_agent/conf
 
 # Kopiere die Konfigurationsdateien (falls nötig)
-COPY your-config-file.xml /data/teamcity_agent/conf/buildAgent.properties
+#COPY your-config-file.xml /data/teamcity_agent/conf/buildAgent.properties
 
 # Startbefehl für den TeamCity-Agenten
 CMD ["/run-services.sh"]
