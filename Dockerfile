@@ -1,14 +1,17 @@
 # Verwende das offizielle TeamCity-Agent-Image als Basis
 FROM jetbrains/teamcity-agent:latest
 
+# Stelle sicher, dass alle Befehle als Root ausgeführt werden
+USER root
+
 # Installiere Abhängigkeiten
 RUN apt-get update && apt-get install -y \
-    wget \
+    curl \
     apt-transport-https \
     software-properties-common
 
 # Installiere das Microsoft-Paketrepository und die Schlüssel
-RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
+RUN curl -sSL https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb \
     && rm packages-microsoft-prod.deb
 
@@ -26,6 +29,9 @@ COPY run-agent.sh /opt/buildagent/
 
 # Setze die Ausführungsrechte für das Startskript
 RUN chmod +x /opt/buildagent/run-agent.sh
+
+# Setze den Benutzer zurück auf den Standard-Agent-Benutzer
+USER buildagent
 
 # Startbefehl für den TeamCity-Agenten
 CMD ["/opt/buildagent/run-agent.sh"]
