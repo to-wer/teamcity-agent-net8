@@ -22,16 +22,16 @@ RUN apt-get update && apt-get install -y dotnet-sdk-8.0
 ENV DOTNET_ROOT=/usr/share/dotnet
 
 # Setze das Arbeitsverzeichnis
-WORKDIR /data/teamcity_agent
+WORKDIR /opt/buildagent
 
 # Kopiere die Startskripte für den Agenten
-COPY run-agent.sh /data/teamcity_agent
+COPY run-agent.sh /opt/buildagent/
 
 # Setze die Ausführungsrechte für das Startskript
-RUN chmod +x /data/teamcity_agent/run-agent.sh
+RUN chmod +x /opt/buildagent/run-agent.sh
 
 # Setze den Benutzer zurück auf den Standard-Agent-Benutzer
 USER buildagent
 
 # Startbefehl für den TeamCity-Agenten
-CMD ["/data/teamcity_agent/run-agent.sh"]
+CMD ["/opt/buildagent/run-agent.sh"]
