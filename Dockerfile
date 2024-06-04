@@ -1,12 +1,19 @@
 # Verwende das offizielle TeamCity-Agent-Image als Basis
 FROM jetbrains/teamcity-agent:latest
 
-# Installiere das .NET 8 SDK
-RUN wget https://dotnetcli.azureedge.net/dotnet/Sdk/8.0.100/dotnet-sdk-8.0.100-linux-x64.tar.gz -O dotnet-sdk.tar.gz \
-    && mkdir -p /usr/share/dotnet \
-    && tar -zxf dotnet-sdk.tar.gz -C /usr/share/dotnet \
-    && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet \
-    && rm dotnet-sdk.tar.gz
+# Installiere Abhängigkeiten
+RUN apt-get update && apt-get install -y \
+    curl \
+    apt-transport-https \
+    software-properties-common
+
+# Installiere das Microsoft-Paketrepository und die Schlüssel
+RUN curl -sSL https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
+    && dpkg -i packages-microsoft-prod.deb \
+    && rm packages-microsoft-prod.deb
+
+# Aktualisiere die Paketliste und installiere das .NET SDK
+RUN apt-get update && apt-get install -y dotnet-sdk-8.0
 
 # Setze die Umgebungsvariable für den Pfad
 ENV DOTNET_ROOT=/usr/share/dotnet
