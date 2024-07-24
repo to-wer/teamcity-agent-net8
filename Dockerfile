@@ -1,5 +1,5 @@
 # Verwende das offizielle TeamCity-Agent-Image als Basis
-FROM jetbrains/teamcity-agent:2024.03.2
+FROM jetbrains/teamcity-agent:2024.07
 
 # Stelle sicher, dass alle Befehle als Root ausgeführt werden
 USER root
